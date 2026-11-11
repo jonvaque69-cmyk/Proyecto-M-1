@@ -133,19 +133,22 @@ with tab2:
 
     with gcol1:
         st.subheader("PIB per Cápita (r = 0.73)")
-        fig_pib = px.scatter(filtrados, x="pib_per_capita", y="puntuacion_felicidad", hover_name="pais", trendline="ols", labels={"pib_per_capita": "PIB per cápita", "puntuacion_felicidad": "Felicidad"})
-        fig_pib.update_layout(margin=dict(l=0, r=0, t=30, b=0))
-        st.plotly_chart(fig_pib, use_container_width=True)
+        fig_pib = px.scatter(filtrados, x="pib_per_capita", y="puntuacion_felicidad", hover_name="pais", trendline="ols", labels={"pib_per_capita": "PIB per cápita", "puntuacion_felicidad": "Felicidad"}) #le decimos sus características al gráfico
+        fig_pib.update_traces(selector=dict(mode="lines"), line=dict(color="red", width=3)) #editamos la linea
+        fig_pib.update_layout(margin=dict(l=0, r=0, t=30, b=0)) #para aprovechar bien el gráfico con sus márgenes
+        st.plotly_chart(fig_pib, use_container_width=True) #la orden para ponerlo en streamlit
 
     with gcol2:
         st.subheader("Esperanza de Vida (r = 0.68)")
         fig_esp = px.scatter(filtrados, x="esperanza_vida", y="puntuacion_felicidad", hover_name="pais", trendline="ols", labels={"esperanza_vida": "Esperanza de vida", "puntuacion_felicidad": "Felicidad"})
+        fig_esp.update_traces(selector=dict(mode="lines"), line=dict(color="red", width=3))
         fig_esp.update_layout(margin=dict(l=0, r=0, t=30, b=0))
         st.plotly_chart(fig_esp, use_container_width=True)
 
     with gcol3:
         st.subheader("Apoyo Social (r = 0.63)")
         fig_apo = px.scatter(filtrados, x="apoyo_social", y="puntuacion_felicidad", hover_name="pais", trendline="ols", labels={"apoyo_social": "Apoyo social", "puntuacion_felicidad": "Felicidad"})
+        fig_apo.update_traces(selector=dict(mode="lines"), line=dict(color="red", width=3))
         fig_apo.update_layout(margin=dict(l=0, r=0, t=30, b=0))
         st.plotly_chart(fig_apo, use_container_width=True)
 
@@ -157,18 +160,21 @@ with tab2:
     with gcol4:
         st.subheader("Libertad (r = 0.55)")
         fig_lib = px.scatter(filtrados, x="libertad", y="puntuacion_felicidad", hover_name="pais", trendline="ols", labels={"libertad": "Libertad", "puntuacion_felicidad": "Felicidad"})
+        fig_lib.update_traces(selector=dict(mode="lines"), line=dict(color="red", width=3))
         fig_lib.update_layout(margin=dict(l=0, r=0, t=30, b=0))
         st.plotly_chart(fig_lib, use_container_width=True)
 
     with gcol5:
         st.subheader("Corrupción (r = 0.42)")
         fig_corr = px.scatter(filtrados, x="corrupcion", y="puntuacion_felicidad", hover_name="pais", trendline="ols", labels={"corrupcion": "Percepción de corrupción", "puntuacion_felicidad": "Felicidad"})
+        fig_corr.update_traces(selector=dict(mode="lines"), line=dict(color="red", width=3))
         fig_corr.update_layout(margin=dict(l=0, r=0, t=30, b=0))
         st.plotly_chart(fig_corr, use_container_width=True)
 
     with gcol6:
         st.subheader("Generosidad (r = 0.08)")
         fig_gen = px.scatter(filtrados, x="generosidad", y="puntuacion_felicidad", hover_name="pais", trendline="ols", labels={"generosidad": "Generosidad", "puntuacion_felicidad": "Felicidad"})
+        fig_gen.update_traces(selector=dict(mode="lines"), line=dict(color="red", width=3))
         fig_gen.update_layout(margin=dict(l=0, r=0, t=30, b=0))
         st.plotly_chart(fig_gen, use_container_width=True)
         
