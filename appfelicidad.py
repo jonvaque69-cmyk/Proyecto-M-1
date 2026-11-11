@@ -123,31 +123,62 @@ with tab1: #pestaña 1
     st.header("Los países filtrados") #titulo pestaña
     st.dataframe(filtrados) #la tabla de los países filtrados
 
-    
-
-
 
 with tab2:
     st.header("Análisis de Factores Clave & Felicidad")
     st.markdown("Explora cómo se relacionan los factores socioeconómicos con la puntuación de felicidad según tus filtros actuales.")
 
-    
-    gcol1, gcol2, gcol3 = st.columns(3) # Creamos 3 columnas en la pestaña para poner los 3 gráficos uno al lado del otro
+    # Fila 1: Los tres grandes motores (PIB, Esperanza de vida, Apoyo social)
+    gcol1, gcol2, gcol3 = st.columns(3)
 
     with gcol1:
-        st.subheader("PIB per cápita")
-        fig_pib = px.scatter(filtrados, x="pib_per_capita", y="puntuacion_felicidad",hover_name="pais",labels={"pib_per_capita": "PIB per cápita", "puntuacion_felicidad": "Felicidad"})
+        st.subheader("PIB per Cápita (r = 0.73)")
+        fig_pib = px.scatter(filtrados, x="pib_per_capita", y="puntuacion_felicidad", hover_name="pais", trendline="ols", labels={"pib_per_capita": "PIB per cápita", "puntuacion_felicidad": "Felicidad"})
+        fig_pib.update_layout(margin=dict(l=0, r=0, t=30, b=0))
         st.plotly_chart(fig_pib, use_container_width=True)
 
     with gcol2:
-        st.subheader("Esperanza de Vida")
-        fig_esp = px.scatter(filtrados, x="esperanza_vida", y="puntuacion_felicidad",hover_name="pais",labels={"esperanza_vida": "Esperanza de vida", "puntuacion_felicidad": "Felicidad"})
+        st.subheader("Esperanza de Vida (r = 0.68)")
+        fig_esp = px.scatter(filtrados, x="esperanza_vida", y="puntuacion_felicidad", hover_name="pais", trendline="ols", labels={"esperanza_vida": "Esperanza de vida", "puntuacion_felicidad": "Felicidad"})
+        fig_esp.update_layout(margin=dict(l=0, r=0, t=30, b=0))
         st.plotly_chart(fig_esp, use_container_width=True)
 
     with gcol3:
-        st.subheader("Corrupción")
-        fig_corr = px.scatter(filtrados, x="corrupcion", y="puntuacion_felicidad",hover_name="pais",labels={"corrupcion": "Percepción de corrupción", "puntuacion_felicidad": "Felicidad"})
+        st.subheader("Apoyo Social (r = 0.63)")
+        fig_apo = px.scatter(filtrados, x="apoyo_social", y="puntuacion_felicidad", hover_name="pais", trendline="ols", labels={"apoyo_social": "Apoyo social", "puntuacion_felicidad": "Felicidad"})
+        fig_apo.update_layout(margin=dict(l=0, r=0, t=30, b=0))
+        st.plotly_chart(fig_apo, use_container_width=True)
+
+    st.markdown("---")
+
+    # Fila 2: Factores moderados y la anomalía (Libertad, Corrupción, Generosidad)
+    gcol4, gcol5, gcol6 = st.columns(3)
+
+    with gcol4:
+        st.subheader("Libertad (r = 0.55)")
+        fig_lib = px.scatter(filtrados, x="libertad", y="puntuacion_felicidad", hover_name="pais", trendline="ols", labels={"libertad": "Libertad", "puntuacion_felicidad": "Felicidad"})
+        fig_lib.update_layout(margin=dict(l=0, r=0, t=30, b=0))
+        st.plotly_chart(fig_lib, use_container_width=True)
+
+    with gcol5:
+        st.subheader("Corrupción (r = 0.42)")
+        fig_corr = px.scatter(filtrados, x="corrupcion", y="puntuacion_felicidad", hover_name="pais", trendline="ols", labels={"corrupcion": "Percepción de corrupción", "puntuacion_felicidad": "Felicidad"})
+        fig_corr.update_layout(margin=dict(l=0, r=0, t=30, b=0))
         st.plotly_chart(fig_corr, use_container_width=True)
+
+    with gcol6:
+        st.subheader("Generosidad (r = 0.08)")
+        fig_gen = px.scatter(filtrados, x="generosidad", y="puntuacion_felicidad", hover_name="pais", trendline="ols", labels={"generosidad": "Generosidad", "puntuacion_felicidad": "Felicidad"})
+        fig_gen.update_layout(margin=dict(l=0, r=0, t=30, b=0))
+        st.plotly_chart(fig_gen, use_container_width=True)
+        
+    st.info("💡 **Nota analítica:** Observa cómo los primeros gráficos muestran una pendiente muy pronunciada (fuerte correlación), mientras que la generosidad dibuja una línea casi plana.")
+
+
+
+
+
+
 
 # 7.2 Si tus datos tienen latitud y longitud, otra pestaña con el mapa.
 
