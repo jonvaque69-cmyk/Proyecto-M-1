@@ -45,8 +45,10 @@ La felicidad en el mundo en Data
 La aplicación permite explorar los datos del World Happiness Report (2015–2023) filtrando países por región, año y variables socioeconómicas para analizar sus métricas clave y consultar los registros detallados. A través de gráficos de dispersión con líneas de tendencia y un mapamundi interactivo, muestra cómo influyen factores como el PIB, la esperanza de vida o la corrupción en el nivel de felicidad de cada país. Además, incluye un comparador histórico independiente para enfrentar cara a cara la evolución de dos países distintos a lo largo de los años.
 
 
+https://felicidad15-23.streamlit.app/
 
-Enlace: (si la has publicado en Streamlit Community Cloud)
+
+
 
 ## Cómo ejecutarlo
 
@@ -57,4 +59,4 @@ Enlace: (si la has publicado en Streamlit Community Cloud)
 ## Autor
 Jon Vaquerizo 
 
-(Tu nombre y tu LinkedIn o tu GitHub.)
+GitHub: jonvaque69-cmyk
