@@ -11,6 +11,8 @@ import streamlit as st # para la página
 import pandas as pd  # para las tablas
 import plotly.express as px
 
+
+
 # 1.2 Pon el nombre de la pestaña del navegador, la página a todo lo ancho y un título que diga de qué va tu proyecto.
 
 st.set_page_config(page_title="La Felicidad",page_icon="😊",layout="wide") # el nombre de la pestaña, el icono y la página a todo lo ancho
@@ -104,16 +106,14 @@ with col1:
 with col2:
     st.metric("Nota felicidad más alta:", round(filtrados["puntuacion_felicidad"].max(),2)) #la nota de felicidad más alta
 
-
 with col3:
-    st.metric("PIB per cápita más alto:", round(filtrados["pib_per_capita"].max(),2)) #el PIB per cápita más alto
+    felicidad_media_filtrada = filtrados["puntuacion_felicidad"].mean()
+    st.metric("Felicidad media (Filtro)", round(felicidad_media_filtrada, 2))
 
-
-espana = felicidad[felicidad["pais"] == "Spain"] #Filtramos los datos de España del DataFrame original
+espana = felicidad[felicidad["pais"] == "Spain"] # Datos fijos de España para referencia
 with col4:
-    st.markdown("### España(Media)")
-    st.metric("Felicidad",round(espana["puntuacion_felicidad"].mean(),2)) #calculamos y mostramos la nota de felicidad media de España
-    st.metric("PIB",round(espana["pib_per_capita"].mean(),2)) # Calculamos y mostramos el PIB medio de españa 
+    st.metric("España (Media Hist.)", round(espana["puntuacion_felicidad"].mean(), 2))
+
 
 
 # Paso 7. Las pestañas
@@ -228,55 +228,84 @@ with tab3:
 # 8.1 Una última pestaña con una pregunta, como "¿Cuánto cobrarías por tu piso?" o "¿Te habrías salvado?":
 #     el usuario elige algo y la app le contesta con lo que dicen los datos.
 
+
 with tab4:
     st.header("📈 Evolución Histórica Comparativa")
-    st.markdown("Selecciona hasta dos países para comparar su evolución temporal de forma independiente de los filtros globales.")
+    st.markdown("Selecciona dos países para comparar toda su radiografía socioeconómica (2015-2023) de forma independiente de los filtros globales.")
 
-    
-    lista_paises = sorted(felicidad["pais"].unique()) #Obtenemos la lista limpia de todos los países disponibles del dataset 'felicidad'
+    lista_paises = sorted(felicidad["pais"].unique()) # Lista limpia de países
 
-    dcol1, dcol2 = st.columns(2) #Creamos dos columnas para poner los desplegables de selección lado a lado
+    dcol1, dcol2 = st.columns(2)
 
     with dcol1:
-        default_p1 = lista_paises.index("Spain") if "Spain" in lista_paises else 0 #pongo este if con el else a 0 por seguridad
+        default_p1 = lista_paises.index("Spain") if "Spain" in lista_paises else 0
         pais_1 = st.selectbox("Selecciona el primer país:", lista_paises, index=default_p1, key="evol_pais_1")
 
     with dcol2:
-        default_p2 = lista_paises.index("Portugal") if "Portugal" in lista_paises else 1 #pongo este if con el else a 1 por seguridad
+        default_p2 = lista_paises.index("Portugal") if "Portugal" in lista_paises else 1
         pais_2 = st.selectbox("Selecciona el segundo país:", lista_paises, index=default_p2, key="evol_pais_2")
 
-    
-    df_comparativa = felicidad[felicidad["pais"].isin([pais_1, pais_2])] #Filtramos el DataFrame 'felicidad' exclusivamente para los dos países seleccionados
+    df_comparativa = felicidad[felicidad["pais"].isin([pais_1, pais_2])]
 
-    #Comprobamos que hay datos para pintar
-    if not df_comparativa.empty: #si no está vacía
-        
+    if not df_comparativa.empty:
         st.markdown("---")
         
-        # Fila 1: Felicidad y PIB
-        r1_col1, r1_col2 = st.columns(2)
-        
-        with r1_col1:
+        # Colores fijos para distinguir ambos países limpiamente
+        colores_paises = ["#f3041c", "#8fee14"]
+
+        # --- FILA 1: Felicidad, PIB y Esperanza de Vida ---
+        r1_c1, r1_c2, r1_c3 = st.columns(3)
+
+        with r1_c1:
             st.subheader("Evolución de la Felicidad")
-            fig_evo_fel = px.line(df_comparativa,x="año",y="puntuacion_felicidad",color="pais",markers=True,labels={"año": "Año", "puntuacion_felicidad": "Felicidad", "pais": "País"},color_discrete_sequence=["#f3041c", "#8fee14"])
+            fig_evo_fel = px.line(df_comparativa, x="año", y="puntuacion_felicidad", color="pais", markers=True, labels={"año": "Año", "puntuacion_felicidad": "Felicidad", "pais": "País"}, color_discrete_sequence=colores_paises)
+            fig_evo_fel.update_layout(margin=dict(l=0, r=0, t=30, b=0))
             st.plotly_chart(fig_evo_fel, use_container_width=True)
 
-        with r1_col2:
+        with r1_c2:
             st.subheader("Evolución del PIB")
-            fig_evo_pib = px.line(df_comparativa,x="año",y="pib_per_capita",color="pais",markers=True,labels={"año": "Año", "pib_per_capita": "PIB per cápita", "pais": "País"},color_discrete_sequence=["#f3041c", "#8fee14"])
+            fig_evo_pib = px.line(df_comparativa, x="año", y="pib_per_capita", color="pais", markers=True, labels={"año": "Año", "pib_per_capita": "PIB per cápita", "pais": "País"}, color_discrete_sequence=colores_paises)
+            fig_evo_pib.update_layout(margin=dict(l=0, r=0, t=30, b=0))
             st.plotly_chart(fig_evo_pib, use_container_width=True)
 
-        r2_col1, r2_col2 = st.columns(2)#Fila 2: Esperanza de Vida y Corrupción
+        with r1_c3:
+            st.subheader("Evolución Apoyo Social")
+            fig_evo_apo = px.line(df_comparativa, x="año", y="apoyo_social", color="pais", markers=True, labels={"año": "Año", "apoyo_social": "Apoyo social", "pais": "País"}, color_discrete_sequence=colores_paises)
+            fig_evo_apo.update_layout(margin=dict(l=0, r=0, t=30, b=0))
+            st.plotly_chart(fig_evo_apo, use_container_width=True)
 
-        with r2_col1:
-            st.subheader("Evolución de la Esperanza de Vida")
-            fig_evo_esp = px.line(df_comparativa,x="año",y="esperanza_vida",color="pais",markers=True,labels={"año": "Año", "esperanza_vida": "Esperanza de vida", "pais": "País"},color_discrete_sequence=["#f3041c", "#8fee14"])
-            st.plotly_chart(fig_evo_esp, use_container_width=True)
+        st.markdown("---")
 
-        with r2_col2:
+        # --- FILA 2: Libertad, Corrupción y Generosidad ---
+        r2_c1, r2_c2, r2_c3 = st.columns(3)
+
+        with r2_c1:
+            st.subheader("Evolución de la Libertad")
+            fig_evo_lib = px.line(df_comparativa, x="año", y="libertad", color="pais", markers=True, labels={"año": "Año", "libertad": "Libertad", "pais": "País"}, color_discrete_sequence=colores_paises)
+            fig_evo_lib.update_layout(margin=dict(l=0, r=0, t=30, b=0))
+            st.plotly_chart(fig_evo_lib, use_container_width=True)
+
+        with r2_c2:
             st.subheader("Evolución de la Corrupción")
-            fig_evo_corr = px.line(df_comparativa,x="año",y="corrupcion",color="pais",markers=True,labels={"año": "Año", "corrupcion": "Percepción de corrupción", "pais": "País"},color_discrete_sequence=["#f3041c", "#8fee14"])
+            fig_evo_corr = px.line(df_comparativa, x="año", y="corrupcion", color="pais", markers=True, labels={"año": "Año", "corrupcion": "Corrupción", "pais": "País"}, color_discrete_sequence=colores_paises)
+            fig_evo_corr.update_layout(margin=dict(l=0, r=0, t=30, b=0))
             st.plotly_chart(fig_evo_corr, use_container_width=True)
 
+
+        with r2_c3:
+            st.subheader("Evolución Esperanza de Vida")
+            fig_evo_esp = px.line(df_comparativa, x="año", y="esperanza_vida", color="pais", markers=True, labels={"año": "Año", "esperanza_vida": "Esperanza de vida", "pais": "País"}, color_discrete_sequence=colores_paises)
+            fig_evo_esp.update_layout(margin=dict(l=0, r=0, t=30, b=0))
+            st.plotly_chart(fig_evo_esp, use_container_width=True)
+
+
+
     else:
-        st.warning("Selecciona al menos un país válido para ver la comparativa.") #si la lista  del if no t está vacá salta a esta alarma
+        st.warning("Selecciona países válidos para ver la comparativa.")
+
+
+
+
+
+
+
